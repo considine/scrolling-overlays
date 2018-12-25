@@ -26,9 +26,8 @@ function koptional_video_overlays()
     $image_id = get_option('myprefix_image_id');
     ?>
 <p id="shortcodeResp"> </p>
-<input type="hidden" name="myprefix_image_id" id="myprefix_image_id" value="<?php echo esc_attr($image_id); ?>" class="regular-text" />
-<br>
-<input type='button' class="button-primary" value="<?php esc_attr_e('Select a image', 'mytextdomain');?>" id="myprefix_media_manager" />
+<input type='button' class="button-primary" value="<?php esc_attr_e('Select an image');?>" id="image_media_manager" />
+<input type='button' class="button-primary" value="<?php esc_attr_e('Select a video');?>" id="video_media_manager" />
 <?php
 }
 
