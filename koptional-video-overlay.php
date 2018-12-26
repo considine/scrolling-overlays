@@ -142,7 +142,7 @@ function kopoverlay_func($atts)
           </video> -->
         <div class="koptional-embed-wrapper" style="max-width: 135vh;">
             <div class="responsive-embed">
-                <iframe enablejsapi="1" id="youtube-video-{$id}" width="420" height="315" src="{$youtube}d?enablejsapi=1&mute=1"
+                <iframe enablejsapi="1" id="youtube-video-{$id}" width="420" height="315" src="{$youtube}?enablejsapi=1&mute=1"
                 frameborder="0" allowfullscreen></iframe>
             </div>
         </div>
