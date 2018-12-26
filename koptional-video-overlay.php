@@ -27,7 +27,7 @@ function koptional_video_overlays()
     ?>
 <img style="max-width: 100%; width: 500px;" src="<?php echo plugins_url('/embed.gif', __FILE__) ?>">
 <p class="noselect"> <small> For videos, you can switch to Youtube. after generating your shortcode the normal way
-add a youtube attribute (and optionally a fallback URL where the User can click a link). It will look like this: 
+add a youtube attribute (and optionally a fallback URL where the User can click a link). It will look like this:
 </small> </p>
 <img style="max-width: 100%; width: 500px;"   alt="Instructions" src="<?php echo plugins_url('/demoimage.png', __FILE__) ?>">
 
@@ -133,22 +133,20 @@ function kopoverlay_func($atts)
     $style = $a['side'] == "right" ? "right: 0;" : "left: 0;";
     if ($type == 'VIDEO' && $youtube) {
         $fallbackHTML = $fallbackurl ? "<p class='fallback-text'> Trouble watching YouTube? Click <a target='_blank' href='{$fallbackurl}'>
-        here </a> to watch instead </p>" : "<p class='fallback-text'> TESTING </p> ";
+        here </a> to watch instead </p>" : "";
         return <<<HTML
  <div data-type="koptional-youtube-overlay" data-target="{$id}" id="koptional-overlay-{$id}" class="koptional-overlay-insert">
       <div class="koptional-overlay">
         <!-- <video id="vid1" autoplay='autoplay' muted='muted' class="video-js vjs-default-skin" controls muted="muted"
             autoplay width="700" data-setup='{ "techOrder": ["youtube"], "sources": [{ "type": "video/youtube", "src": "https://www.youtube.com/watch?v=emNgfuw8vlA"}], "youtube": { "iv_load_policy": 1 } }'>
           </video> -->
-        <div style="position: relative; width: 100%; height: 90%; max-width: 1200px; background-color: black;">
-          <div class="responsive-embed">
-            <iframe enablejsapi="1" id="youtube-video-{$id}" width="420" height="315" src="{$youtube}?enablejsapi=1&mute=1"
-              frameborder="0" allowfullscreen></iframe>
-          </div>
+        <div class="koptional-embed-wrapper" style="max-width: 135vh;">
+            <div class="responsive-embed">
+                <iframe enablejsapi="1" id="youtube-video-{$id}" width="420" height="315" src="{$youtube}d?enablejsapi=1&mute=1"
+                frameborder="0" allowfullscreen></iframe>
+            </div>
         </div>
-        <div class="fallback">
-        {$fallbackHTML}
-        </div>
+       {$fallbackHTML}
       </div>
     </div>
 HTML;
