@@ -25,6 +25,12 @@ function koptional_video_overlays()
 {
     $image_id = get_option('myprefix_image_id');
     ?>
+<img style="max-width: 100%; width: 500px;" src="<?php echo plugins_url('/embed.gif', __FILE__) ?>">
+<p class="noselect"> <small> For videos, you can switch to Youtube. after generating your shortcode the normal way
+add a youtube attribute (and optionally a fallback URL where the User can click a link). It will look like this: 
+</small> </p>
+<img style="max-width: 100%; width: 500px;"   alt="Instructions" src="<?php echo plugins_url('/demoimage.png', __FILE__) ?>">
+
 <p id="shortcodeResp"> </p>
 <input type='button' class="button-primary" value="<?php esc_attr_e('Select an image');?>" id="image_media_manager" />
 <input type='button' class="button-primary" value="<?php esc_attr_e('Select a video');?>" id="video_media_manager" />
