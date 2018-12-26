@@ -106,7 +106,9 @@ function kopoverlay_func($atts)
         'id' => null,
         'type' => null,
         'caption' => '',
-        "side" => null
+        "side" => null,
+        'youtube' => null,
+        'fallbackurl' => null,
     ), $atts);
 
     $table_name = $wpdb->prefix . 'koptional_overlay';
@@ -120,7 +122,31 @@ function kopoverlay_func($atts)
     $id = $ar[0]->id;
     $type = $ar[0]->type;
     $caption = $a['caption'];
-    $style = $a['side'] == "right" ? "left: unset; right: 40px;" : "";
+    $youtube = $a["youtube"];
+    $fallbackurl = $a["fallbackurl"];
+    $style = $a['side'] == "right" ? "right: 0;" : "left: 0;";
+    if ($type == 'VIDEO' && $youtube) {
+        $fallbackHTML = $fallbackurl ? "<p class='fallback-text'> Trouble watching YouTube? Click <a target='_blank' href='{$fallbackurl}'>
+        here </a> to watch instead </p>" : "<p class='fallback-text'> TESTING </p> ";
+        return <<<HTML
+ <div data-type="koptional-youtube-overlay" data-target="{$id}" id="koptional-overlay-{$id}" class="koptional-overlay-insert">
+      <div class="koptional-overlay">
+        <!-- <video id="vid1" autoplay='autoplay' muted='muted' class="video-js vjs-default-skin" controls muted="muted"
+            autoplay width="700" data-setup='{ "techOrder": ["youtube"], "sources": [{ "type": "video/youtube", "src": "https://www.youtube.com/watch?v=emNgfuw8vlA"}], "youtube": { "iv_load_policy": 1 } }'>
+          </video> -->
+        <div style="position: relative; width: 100%; height: 90%; max-width: 700px; background-color: black;">
+          <div class="responsive-embed">
+            <iframe enablejsapi="1" id="youtube-video-{$id}" width="420" height="315" src="{$youtube}?enablejsapi=1&mute=1"
+              frameborder="0" allowfullscreen></iframe>
+          </div>
+        </div>
+        <div class="fallback">
+        {$fallbackHTML}
+        </div>
+      </div>
+    </div>
+HTML;
+    }
     if ($type == 'VIDEO') {
         return <<<HTML
         <div data-type="koptional-video-overlay" data-target="{$id}" id="koptional-overlay-{$id}" class="koptional-overlay-insert">
@@ -131,18 +157,22 @@ function kopoverlay_func($atts)
           </div>
         </div>
 HTML;
-    }
-    else if ($type == "IMAGE") {
+    } else if ($type == "IMAGE") {
         return <<<HTML
-        <div class="montage fullbleed-container" style="width: 100%; max-width: 100%;">
-      <div class="montage-frame-container">
-        <div class="montage-frame chrome-adjust-vh-1 montage-frame-visible">
-          <div class="montage-image active" style="background-image: url({$url})"></div>
-        </div>
-      </div>
-      <div class="montage-item first-item chrome-adjust-vh-2">
-        <div class="montage-caption" style="{$style}">{$caption}
-         </div>
+       <div data-type="koptional-image-overlay" data-target="{$id}" id="koptional-overlay-{$id}" class="koptional-overlay-insert">
+      <div class="koptional-overlay">
+        <img src="{$url}" alt="Photo">
+        <p class="scrolling-text" style="position: absolute;
+                color: white;
+                top: 10%;
+                max-width: 400px;
+                {$style}
+                font-size: 20px;
+                text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+                max-width: 320px;
+                text-align: left;
+                padding: 32px;"> {$caption}
+         </p>
       </div>
     </div>
 HTML;
@@ -161,7 +191,7 @@ function koptional_overlay_enqueue_style()
 
 function koptional_overlay_enqueue_script()
 {
-    wp_enqueue_script('koptional-js', plugins_url('/static/main.67541b59.js', __FILE__), false);
+    wp_enqueue_script('koptional-js', plugins_url('/static/main.78eda2fc.js', __FILE__), false);
 }
 
 add_action('wp_enqueue_scripts', 'koptional_overlay_enqueue_style');
