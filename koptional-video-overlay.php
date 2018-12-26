@@ -140,7 +140,7 @@ function kopoverlay_func($atts)
         <!-- <video id="vid1" autoplay='autoplay' muted='muted' class="video-js vjs-default-skin" controls muted="muted"
             autoplay width="700" data-setup='{ "techOrder": ["youtube"], "sources": [{ "type": "video/youtube", "src": "https://www.youtube.com/watch?v=emNgfuw8vlA"}], "youtube": { "iv_load_policy": 1 } }'>
           </video> -->
-        <div style="position: relative; width: 100%; height: 90%; max-width: 700px; background-color: black;">
+        <div style="position: relative; width: 100%; height: 90%; max-width: 1200px; background-color: black;">
           <div class="responsive-embed">
             <iframe enablejsapi="1" id="youtube-video-{$id}" width="420" height="315" src="{$youtube}?enablejsapi=1&mute=1"
               frameborder="0" allowfullscreen></iframe>
