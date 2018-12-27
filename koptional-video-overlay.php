@@ -13,7 +13,7 @@ function wporg_options_page()
     add_menu_page(
         'Video Overlay',
         'Video Overlay',
-        'manage_options',
+        'edit_posts',
         'wporg',
         'koptional_video_overlays'
     );
