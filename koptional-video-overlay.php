@@ -195,7 +195,7 @@ function koptional_overlay_enqueue_style()
 
 function koptional_overlay_enqueue_script()
 {
-    wp_enqueue_script('koptional-js', plugins_url('/static/main.79eda2fc.js', __FILE__), false);
+    wp_enqueue_script('koptional-js', plugins_url('/static/main.80eda2fc.js', __FILE__), false);
 }
 
 add_action('wp_enqueue_scripts', 'koptional_overlay_enqueue_style');
