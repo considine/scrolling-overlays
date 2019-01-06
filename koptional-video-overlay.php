@@ -1,20 +1,20 @@
 <?php
 /*
-Plugin Name: Koptional Scrolling Video
-Plugin URI: https://koptional.com/plugins/health-check/
-Description: Adds video overlays on scroll
-Version: 0.1.0
-Author: Jack Considine
+Plugin Name: Scrolling Overlays
+Plugin URI: https://wordpress.org/plugins/scrolling-overlays
+Description: Adds media overlays on scroll
+Version: 0.1.1
+Author: Cassidy Mcdonald & Jack Considine
  */
 
 define('KOPTIONAL_OVERLAY_TABLE', 'koptional_overlays');
 function wporg_options_page() {
     // add top level menu page
     add_menu_page(
-        'Video Overlay',
-        'Video Overlay',
+        'Scrolling Overlays',
+        'Scrolling Overlays',
         'edit_posts',
-        'wporg',
+        'scrolling_overlays',
         'koptional_video_overlays'
     );
 }
