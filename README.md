@@ -1,14 +1,8 @@
-#### Scrolling Overlays
+This plugin allows you to insert "Scrolling Overlays" into your posts and pages. 
 
-![example](kop-overlay.gif)
+A Scrolling Overlay is a view that appears, covering the whole screen, presenting some sort of media.
+It displays at the conventional time- when it's scrollheight is in the viewport. 
 
-##### Importing this Plugin
-######## Install
-![install](plugin_install.gif)
-
-Download this repository as a .zip file using "Clone or Download" button above.
-
-In your WordPress admin panel, navigate to plugins, "Add New", and click "Upload Plugin" on the top. You may then upload the .zip you downloaded.
-
-Add overlays to your WordPress posts & pages.
-
+To create an overlay, go to the Scrolling Overlays menu page. Then you can generate 
+shortcodes by selecting images, videos, or inserting a Youtube URL. These shortcodes
+are then placed directly into a post.
