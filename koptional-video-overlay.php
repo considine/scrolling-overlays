@@ -8,20 +8,21 @@ Author: Cassidy Mcdonald & Jack Considine
  */
 
 define('KOPTIONAL_OVERLAY_TABLE', 'koptional_overlays');
-function wporg_options_page() {
+// Prefix = koptional_scrolling_overlays_
+function koptional_scrolling_overlays_options_page() {
     // add top level menu page
     add_menu_page(
         'Scrolling Overlays',
         'Scrolling Overlays',
         'edit_posts',
         'scrolling_overlays',
-        'koptional_video_overlays'
+        'koptional_scrolling_overlays_render_page'
     );
 }
-add_action('admin_menu', 'wporg_options_page');
+add_action('admin_menu', 'koptional_scrolling_overlays_options_page');
 
 // https://wordpress.stackexchange.com/questions/235406/how-do-i-select-an-image-from-media-library-in-my-plugin
-function koptional_video_overlays() {
+function koptional_scrolling_overlays_render_page() {
     $image_id = get_option('myprefix_image_id');
     ?>
 <h2>
@@ -86,46 +87,53 @@ function koptional_video_overlays() {
 
 // As you are dealing with plugin settings,
 // I assume you are in admin side
-add_action('admin_enqueue_scripts', 'load_wp_media_files');
-function load_wp_media_files($page) {
+add_action('admin_enqueue_scripts', 'koptional_scrolling_overlays_load_wp_media_files');
+function koptional_scrolling_overlays_load_wp_media_files($page) {
     // change to the $page where you want to enqueue the script
-    if ($page == 'toplevel_page_wporg') {
+    if ($page == 'toplevel_page_scrolling_overlays') {
         // Enqueue WordPress media scripts
         wp_enqueue_media();
         // Enqueue custom script that will interact with wp.media
         wp_enqueue_script('koptional_admin_script', plugins_url('/js/admin_script.js', __FILE__), array('jquery'), '0.1');
-        wp_enqueue_script('koptional_plugin_script', plugins_url('/static/main.81eda2fc.js', __FILE__), array(), '0.1');
+        wp_enqueue_script('koptional_plugin_script', plugins_url('/static/main.82eda2fc.js', __FILE__), array(), '0.1');
     }
 }
 
-add_action('wp_ajax_koptional_create_overlay', 'koptional_add_video_overlay');
-add_action('wp_ajax_koptional_create_youtube_overlay', 'koptional_add_youtube_overlay');
-function koptional_add_video_overlay() {
+add_action('wp_ajax_koptional_scrolling_overlays_create_overlay', 'koptional_scrolling_overlays_add_video_overlay');
+add_action('wp_ajax_koptional_scrolling_overlays_create_youtube_overlay', 'koptional_scrolling_overlays_add_youtube_overlay');
+function koptional_scrolling_overlays_add_video_overlay() {
     global $wpdb;
     $table_name = $wpdb->prefix . KOPTIONAL_OVERLAY_TABLE;
     if (isset($_POST['url']) && isset($_POST["type"]) && isset($_POST['name'])) {
-        $type = $_POST['type'];
+        $mediaUrl = esc_url_raw($_POST['url']);
+        $mediaType = sanitize_text_field($_POST['type']);
+        $mediaName = sanitize_text_field($_POST['name']);
         $t = $wpdb->insert(
             $table_name,
             array(
-                "url" => "{$_POST['url']}",
-                "type" => "{$type}",
-                'fname' => "{$_POST['name']}",
+                "url" => "{$mediaUrl}",
+                "type" => "{$mediaType}",
+                'fname' => "{$mediaName}",
             ));
         $insert_id = $wpdb->insert_id;
 
-        $shortcode = koptional_generate_shortcode($insert_id, $type);
+        $shortcode = koptional_scrolling_overlays_generate_shortcode($insert_id, $mediaType);
         echo json_encode(["success" => $t, "shortcode" => $shortcode]);
     }
     wp_die();
 }
 
-function koptional_add_youtube_overlay() {
+function koptional_scrolling_overlays_add_youtube_overlay() {
     global $wpdb;
     $table_name = $wpdb->prefix . KOPTIONAL_OVERLAY_TABLE;
+
+
+
     if (isset($_POST['url'])) {
         try {
-        $embed = koptional_get_youtube_embed($_POST['url']);
+            $youtubeUrl = esc_url_raw($_POST['url']);
+
+        $embed = koptional_scrolling_overlays_get_youtube_embed($youtubeUrl);
 
             $t = $wpdb->insert(
             $table_name,
@@ -136,7 +144,7 @@ function koptional_add_youtube_overlay() {
             ));
             $insert_id = $wpdb->insert_id;
 
-            $shortcode = koptional_generate_shortcode($insert_id, 'YOUTUBE');
+            $shortcode = koptional_scrolling_overlays_generate_shortcode($insert_id, 'YOUTUBE');
             echo json_encode(["success" => $t, "shortcode" => $shortcode]);
             wp_die();
 
@@ -148,25 +156,25 @@ function koptional_add_youtube_overlay() {
 
 }
 
-function koptional_generate_shortcode($id, $type) {
+function koptional_scrolling_overlays_generate_shortcode($id, $type) {
     if ($type == "VIDEO") {
-        return "[kopoverlay id=\"{$id}\"]";
+        return "[scrolling_overlay id=\"{$id}\"]";
     } else if ($type == "IMAGE") {
-        return "[kopoverlay id=\"{$id}\" caption=\"\"]";
+        return "[scrolling_overlay id=\"{$id}\" caption=\"\"]";
     } else if ($type === "YOUTUBE") {
-        return "[kopoverlay id=\"{$id}\" fallbackurl=\"\"]";
+        return "[scrolling_overlay id=\"{$id}\" fallbackurl=\"\"]";
     }
 }
 
-add_action("wp_ajax_koptional_get_overlays", 'koptional_get_video_overlays');
-function koptional_get_video_overlays() {
+add_action("wp_ajax_koptional_scrolling_overlays_get_overlays", 'koptional_scrolling_overlays_get_video_overlays');
+function koptional_scrolling_overlays_get_video_overlays() {
     global $wpdb;
     $table_name = $wpdb->prefix . KOPTIONAL_OVERLAY_TABLE;
     $query = $wpdb->get_results('SELECT * FROM ' . $table_name . ' ORDER BY id DESC');
     $results = [];
     foreach ($query as $row) {
         array_push($results, [
-            "shortcode" => koptional_generate_shortcode($row->id, $row->type),
+            "shortcode" => koptional_scrolling_overlays_generate_shortcode($row->id, $row->type),
             "name" => $row->fname,
             "url" => $row->url,
             "type" => strtolower($row->type)
@@ -176,12 +184,12 @@ function koptional_get_video_overlays() {
     wp_die();
 }
 
-global $kop_db_version;
-$kop_db_version = '1.1';
+global $koptional_scrolling_overlays_db_version;
+$koptional_scrolling_overlays_db_version = '1.1';
 
-function kop_install() {
+function koptional_scrolling_overlays_install() {
     global $wpdb;
-    global $kop_db_version;
+    global $koptional_scrolling_overlays_db_version;
 
     $table_name = $wpdb->prefix . KOPTIONAL_OVERLAY_TABLE;
 
@@ -198,12 +206,12 @@ function kop_install() {
     require_once ABSPATH . 'wp-admin/includes/upgrade.php';
     dbDelta($sql);
 
-    add_option('kop_db_version', $kop_db_version);
+    add_option('koptional_scrolling_overlays_db_version', $koptional_scrolling_overlays_db_version);
 }
 
-register_activation_hook(__FILE__, 'kop_install');
+register_activation_hook(__FILE__, 'koptional_scrolling_overlays_install');
 
-function kopoverlay_func($atts) {
+function koptional_scrolling_overlays_shortcode($atts) {
     global $wpdb;
 
     $a = shortcode_atts(array(
@@ -216,8 +224,10 @@ function kopoverlay_func($atts) {
     ), $atts);
 
     $table_name = $wpdb->prefix . KOPTIONAL_OVERLAY_TABLE;
+    $id = sanitize_text_field($a['id']);
+
     // return  'SELECT * FROM ' . $table_name . ' WHERE ID=' . "{$a['id']}";
-    $ar = $wpdb->get_results('SELECT * FROM ' . $table_name . ' WHERE ID=' . "{$a['id']}");
+    $ar = $wpdb->get_results('SELECT * FROM ' . $table_name . ' WHERE ID=' . "{$id}");
     if (sizeof($ar) == 0) {
         return "";
     }
@@ -285,23 +295,23 @@ HTML;
     }
 
 }
-add_shortcode('kopoverlay', 'kopoverlay_func');
+add_shortcode('scrolling_overlay', 'koptional_scrolling_overlays_shortcode');
 
 // Enqueue static scripts and style
-function koptional_overlay_enqueue_style() {
+function koptional_scrolling_overlays_enqueue_style() {
     wp_enqueue_style('video-js-css', plugins_url('/static/video-js.min.css', __FILE__), false);
     // wp_enqueue_style('koptional-montage-css', plugins_url('/static/montage.css', __FILE__), false);
     // wp_enqueue_style('koptional-video-css', plugins_url('/static/style.css', __FILE__), false);
 }
 
-function koptional_overlay_enqueue_script() {
+function koptional_scrolling_overlays_enqueue_script() {
     wp_enqueue_script('koptional-js', plugins_url('/static/main.82eda2fc.js', __FILE__), false);
 }
 
-add_action('wp_enqueue_scripts', 'koptional_overlay_enqueue_style');
-add_action('wp_enqueue_scripts', 'koptional_overlay_enqueue_script');
+add_action('wp_enqueue_scripts', 'koptional_scrolling_overlays_enqueue_style');
+add_action('wp_enqueue_scripts', 'koptional_scrolling_overlays_enqueue_script');
 
-function koptional_get_youtube_embed($link) {
+function koptional_scrolling_overlays_get_youtube_embed($link) {
     // Is video already in embedded form?
     $regExp = '/.*\/embed.*\//';
     preg_match($regExp, $link, $matches, PREG_OFFSET_CAPTURE);

@@ -56,7 +56,7 @@
   jQuery(document).ready(function($) {
     const videoFetcher = new MediaFetcher(function(urls) {
       const data = {
-        action: 'koptional_create_overlay',
+        action: 'koptional_scrolling_overlays_create_overlay',
         url: urls[0].url,
         name: urls[0].filename,
         type: 'VIDEO'
@@ -71,7 +71,7 @@
 
     const imageFetcher = new MediaFetcher(function(urls) {
       const data = {
-        action: 'koptional_create_overlay',
+        action: 'koptional_scrolling_overlays_create_overlay',
         url: urls[0].url,
         name: urls[0].filename,
         type: 'IMAGE'
@@ -98,7 +98,7 @@
       const url = $('input#youtube_url').val();
       $('input#youtube_url').val('');
       const data = {
-        action: 'koptional_create_youtube_overlay',
+        action: 'koptional_scrolling_overlays_create_youtube_overlay',
         url
       };
       jQuery
@@ -118,7 +118,7 @@
     jQuery.post(
       ajaxurl,
       {
-        action: 'koptional_get_overlays'
+        action: 'koptional_scrolling_overlays_get_overlays'
       },
       function(resp_raw) {
         const resp = JSON.parse(resp_raw);
